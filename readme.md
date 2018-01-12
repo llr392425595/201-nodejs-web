@@ -51,3 +51,10 @@
 
 ### 出栈篇
 待定。。。
+
+
+
+
+### 问题与发现
+1. 为什么在routers/items.js里，根路由就是'/items'?
+2. findById(itemId,callback),itemId的格式必须是mongoId格式(如：51bb793aca2ab77a3200000d)
