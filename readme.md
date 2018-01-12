@@ -56,5 +56,11 @@
 
 
 ### 问题与发现
-1. 为什么在routers/items.js里，根路由就是'/items'?
+1. 为什么在routers/items.js里，根路由就是'/items'?  答案：在router/index.js里路由中间件的使用
 2. findById(itemId,callback),itemId的格式必须是mongoId格式(如：51bb793aca2ab77a3200000d)
+3. 将数据库的控制跟路由逻辑分隔开
+
+4. 注意如何修改测试脚本： "test": "mocha --require babel-register --recursive"
+5. 注意在测试代码里导出app
+
+6. require与import混用了，哪一种解决方式好，既然用了babel，全部换成es6写法？
