@@ -1,4 +1,4 @@
-const Cart = require('../models/Cart');
+import Cart from '../models/cart'
 export default class CartController {
     getAll(req, res, next) {
         Cart.find().sort({'createdAt': -1}).exec(function(err, carts) {

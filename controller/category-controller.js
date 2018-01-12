@@ -1,4 +1,4 @@
-const Category = require('../models/category');
+import Category from '../models/category'
 export default class ItemController {
     getAll(req, res, next) {
         Category.find().sort({'createdAt': -1}).exec(function(err, categories) {

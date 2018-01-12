@@ -1,6 +1,4 @@
-import { Stats } from 'fs';
-
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const CategorySchema = new Schema({
