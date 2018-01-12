@@ -8,6 +8,6 @@ const ItemsSchema = new Schema({
     price: { type: String, required: true},
     category: { type: String, required: true},
     carts: [{ type: Schema.Types.ObjectId, ref: 'Cart' }]
-},{timestamps: true});
+});
 
 module.exports = mongoose.model('Item',ItemsSchema)

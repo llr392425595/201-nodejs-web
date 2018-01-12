@@ -33,9 +33,11 @@ export default class ItemController {
         const data = req.body;
         Item.findOneAndRemove(data,function (err, item){
             if (err) return res.status(500).json({error: err.message});
-            res.json({
-                message: '删除成功了！'
-            });
+            if(item){
+                res.json({message: '删除成功了！'});
+            }else{
+                res.json({message: '删除失败！'});
+            }
         });
     }
     updateItem(req,res,next) {
