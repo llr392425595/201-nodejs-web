@@ -1,13 +1,14 @@
 import request from 'supertest'
 import should from 'should'
 import app from '../../app'
+import statusCode from '../../config/statusCode'
 
 describe('API /items', function() {
     it('respond with all items', function(done) {
       request(app)
         .get('/items')
         .set('Accept', 'application/json')
-        .expect(200)
+        .expect(statusCode.GET)
         .end(function(err, res) {
           should.not.exist(err);
           done();
@@ -18,7 +19,7 @@ describe('API /items', function() {
       request(app)
         .get('/items/1')
         .set('Accept', 'application/json')
-        .expect(500)
+        .expect(statusCode.INTERNALSERVERERROR)
         .end(function(err, res) {
           should.not.exist(err);
           done();
@@ -29,7 +30,7 @@ describe('API /items', function() {
       request(app)
         .get('/items/5a58353a016aa55ea4c1d8ae')
         .set('Accept', 'application/json')
-        .expect(200)
+        .expect(statusCode.GET)
         .end(function(err, res) {
           should.not.exist(err);
           done();
@@ -46,7 +47,7 @@ describe('API /items', function() {
         .post('/items')
         .set('Accept', 'application/json')
         .send(item)
-        .expect(200)
+        .expect(statusCode.CREATE)
         .end(function(err, res) {
           should.not.exist(err);
           console.log(res.text);
@@ -65,7 +66,7 @@ describe('API /items', function() {
         .put('/items')
         .set('Accept', 'application/json')
         .send(item)
-        .expect(200)
+        .expect(statusCode.PUT)
         .end(function(err, res) {
           should.not.exist(err);
           console.log(res.text);
@@ -82,7 +83,7 @@ describe('API /items', function() {
         .delete('/items')
         .set('Accept', 'application/json')
         .send(item)
-        .expect(500)
+        .expect(statusCode.INTERNALSERVERERROR)
         .end(function(err, res) {
           should.not.exist(err);
           console.log(res.text);
