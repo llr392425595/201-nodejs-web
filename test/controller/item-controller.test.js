@@ -49,7 +49,7 @@ describe('API /items', function() {
         .expect(200)
         .end(function(err, res) {
           should.not.exist(err);
-          console.log(res.text)
+          console.log(res.text);
           done();
         });
     });
@@ -60,7 +60,7 @@ describe('API /items', function() {
         title: "牛奶",
         price: "7:00",
         category_id: "5a586f535199be300c671dea"
-      }
+      };
       request(app)
         .put('/items')
         .set('Accept', 'application/json')
@@ -68,7 +68,7 @@ describe('API /items', function() {
         .expect(200)
         .end(function(err, res) {
           should.not.exist(err);
-          console.log(res.text)
+          console.log(res.text);
           done();
         });
     });
@@ -77,7 +77,7 @@ describe('API /items', function() {
     it('delete a item', function(done) {
       let item = {
         _id: "5a58353a016aa55ea4c1d8ae"
-      }
+      };
       request(app)
         .delete('/items')
         .set('Accept', 'application/json')
@@ -85,7 +85,7 @@ describe('API /items', function() {
         .expect(500)
         .end(function(err, res) {
           should.not.exist(err);
-          console.log(res.text)
+          console.log(res.text);
           done();
         });
     });
