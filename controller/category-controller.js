@@ -1,17 +1,17 @@
 import Category from '../models/category'
-import statusCode from '../config/statusCode'
+import statusCode from '../constant/statusCode'
 export default class ItemController {
     getAll(req, res, next) {
         Category.find(function(err, categories) {
             if (err) return res.status(statusCode.INTERNALSERVERERROR).json({error: err.message});
-            res.status(statusCode.GET).json({ categories: categories})
+            res.status(statusCode.GET).json({ data: categories,count: categories.length})
         });
     }
     getCategoryByID(req,res,next) {
         const categoryId = req.params.id;
         Category.findById(categoryId, function(err,category){
             if (err) return res.status(statusCode.INTERNALSERVERERROR).json({error: err.message});
-            res.status(statusCode.GET).json({ category: category})
+            res.status(statusCode.GET).json({ data: category})
         })
     }
     addCategory(req,res,next) {
@@ -28,21 +28,21 @@ export default class ItemController {
         });
     }
     deleteCategory(req,res,next) {
-        const data = req.body;
+        let data = req.body;
         Category.findOneAndRemove(data,function (err, category){
             if (err) return res.status(statusCode.INTERNALSERVERERROR).json({error: err.message});
-            res.status(statusCode.DELETE).json({
-                message: '删除成功了！'
-            });
+            if(category){
+                return res.status(statusCode.DELETE).json({uri: `categories/${category._id}`});
+            }else{
+                return res.status(statusCode.INTERNALSERVERERROR).json({error: '没查到数据，删除失败！'});
+            }
         });
     }
     updateCategory(req,res,next) {
         const data = req.body;
         Category.update({_id:data._id},{ $set: data },function(err,item){
             if (err) return res.status(statusCode.INTERNALSERVERERROR).json({error: err.message});
-            res.status(statusCode.PUT).json({
-                message: '更新成功了！'
-            });
+            res.status(statusCode.PUT).json({uri: `categories/${category._id}`});
         });
     }
 }

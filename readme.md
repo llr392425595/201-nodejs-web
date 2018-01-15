@@ -65,3 +65,5 @@
 
 6. require与import混用了，哪一种解决方式好，既然用了babel，全部换成es6写法？
 7. api测试怎样写算是最佳实践，零散单元测试怎么整合
+
+8. 数据库关联操作怎么测试？比如：item跟category是一对多的关系，item中的增加删除会影响category，怎么测试出category的变化
