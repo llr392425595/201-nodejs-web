@@ -11,6 +11,7 @@ export default class ItemController {
         const categoryId = req.params.id;
         Category.findById(categoryId, function(err,category){
             if (err) return next(err);
+            if(!category) return res.status(statusCode.NO_CONTENT).json({error: "没找到数据"}); 
             res.status(statusCode.GET).json({ data: category})
         })
     }
@@ -34,9 +35,10 @@ export default class ItemController {
         });
     }
     updateCategory(req,res,next) {
-        const data = req.body;
-        Category.update({_id:data._id},{ $set: data },function(err,item){
+        const newData = req.body;
+        Category.findOneAndUpdate({_id:newData._id},newData,function(err,category){
             if (err) return next(err);
+            if(!category) return res.status(statusCode.NO_CONTENT).json({error: "没找到数据"}); 
             res.status(statusCode.PUT).json({uri: `categories/${category._id}`});
         });
     }
