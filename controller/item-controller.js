@@ -4,16 +4,17 @@ import statusCode from '../constant/statusCode'
 export default class ItemController {
     getAll(req, res, next) {
         Item.find(function(err, items) {
-            if (err) return res.status(statusCode.INTERNALSERVERERROR).json({error: err.message});
-            res.status(statusCode.GET).json({ data: items,count: items.length})
+            if (err) return next(err);
+            res.status(statusCode.GET).json({ data: items,count: items.length })
         });
     }
     getItemByID(req,res,next) {
         //findById(itemId,callback),itemId的格式必须是mongoId格式(如：51bb793aca2ab77a3200000d)
         const itemId = req.params.id;
         Item.findById(itemId, function(err,item){
-            if (err) return res.status(statusCode.INTERNALSERVERERROR).json({error: err.message});
-            res.status(statusCode.GET).json({ data: item})
+            if (err) return next(err);
+            if(!item) return res.status(statusCode.NO_CONTENT).json({error: "没找到数据"}); 
+            return res.status(statusCode.GET).json({ data: item})
         })
     }
     addItem(req,res,next) {
@@ -25,14 +26,10 @@ export default class ItemController {
             item[prop] = req.body[prop];
         }
         Category.findById(item.category_id,function(err, category){
-            if(err) return res.status(statusCode.INTERNALSERVERERROR).json({error: err.message})
-            if(!category) return res.status(statusCode.INTERNALSERVERERROR).json({message:"该商品类别还不存在，请先添加类别！"})
-            category.items.push(item._id);
+            if(err) return next(err);
+            if(!category) return res.status(statusCode.NOT_FOUND).json({error:"该商品类别还不存在，请先添加类别！"})
             item.save(function(err) {
-                if (err) return res.status(statusCode.INTERNALSERVERERROR).json({error: err.message});
-                category.save(function(err){
-                    if (err) return res.status(statusCode.INTERNALSERVERERROR).json({error: err.message});
-                })
+                if (err) return next(err);
                 res.status(statusCode.CREATE).json({uri: `items/${item._id}`});
             });
         })
@@ -40,34 +37,22 @@ export default class ItemController {
     deleteItem(req,res,next) {
         const data = req.body;
         Item.findOneAndRemove(data,function (err, item){
-            if (err) return res.status(statusCode.INTERNALSERVERERROR).json({error: err.message});
-            if(item){
-                Category.findById(item.category_id,function(err, category){
-                    if(err) return res.status(statusCode.INTERNALSERVERERROR).json({error: err.message})
-                    if(!category) return res.status(statusCode.INTERNALSERVERERROR).json({message:"该商品类别还不存在，请先添加类别！"})
-                    category.items = category.items.filter(element => {
-                        return element.toString() != item._id
-                    });
-                    category.save(function(err){
-                        if (err) return res.status(statusCode.INTERNALSERVERERROR).json({error: err.message});
-                        console.log(2)
-                        return res.status(statusCode.DELETE).json({message: '删除成功了！'});
-                    })
-                })
-            }else{
-                return res.status(statusCode.INTERNALSERVERERROR).json({message: '没查到数据，删除失败！'});
-            }
+            if (err) return next(err);
+            if(item){ return res.status(statusCode.DELETE).json({uri: `items/${item._id}`});}
+            return res.status(statusCode.NO_CONTENT).json({error: '没查到数据，删除失败！'});       
         });
     }
     updateItem(req,res,next) {
         const newData = req.body;
-        Item.findOneAndUpdate({_id:newData._id},newData,function (err, item){
-            if (err) return res.status(statusCode.INTERNALSERVERERROR).json({error: err.message});
-            if(item){
-                return res.status(statusCode.PUT).json({uri: `items/${item._id}`});
-            }else{
-                return res.status(statusCode.INTERNALSERVERERROR).json({message: '没查到数据，更新失败！'});
-            }
-        });
+        Category.findById(newData.category_id,function(err, category){
+            if(err) return next(err);
+            if(!category) return res.status(statusCode.NOT_FOUND).json({error:"该商品类别还不存在，请先添加类别！"})
+            Item.findOneAndUpdate({_id:newData._id},newData,function (err, item){
+                if (err) return next(err);
+                if(!item) return res.status(statusCode.NO_CONTENT).json({error: "没找到数据"}); 
+                console.log(statusCode.PUT)
+                return res.status(statusCode.PUT).end();
+            });
+        })
     }
 }

@@ -6,5 +6,7 @@ export default  {
     CREATE: 201,
     DELETE: 204,
     PUT: 204,
+    NOT_FOUND: 410,
+    NO_CONTENT: 416,
     INTERNALSERVERERROR: 500
 }
