@@ -1,5 +1,7 @@
 import Cart from '../models/cart'
 import statusCode from '../constant/statusCode'
+import { STATUS_CODES } from 'http';
+import { isRegExp } from 'util';
 
 export default class CartController {
     getAll(req, res, next) {
@@ -17,7 +19,11 @@ export default class CartController {
         })
     }
     addCart(req,res,next) {
-        let cart = new Cart();
+        let cart = new Cart({
+            products:[],
+            totalQty:0,
+            totalPrice:0
+        });
         cart.save(function(err) {
             if (err) return next(err);
             res.status(statusCode.CREATE).json({ uri: `carts/${cart._id}` });
@@ -31,6 +37,44 @@ export default class CartController {
             return res.status(statusCode.DELETE).json({uri: `carts/${cart._id}`});
         });
     }
-    
+    addOneItem(req,res,next){
+        let {newItem,cartId} = req.body;
+        Cart.findById(cartId,function(err,cart){
+            if(err) next(err);
+            cart.addProducts(newItem);
+            cart.save(function(err) {
+                if (err) next(err);
+                return res.status(statusCode.PUT).end();
+            });
+        })
+    }
+    reduceOneItem(req,res,next){
+        let {itemId,cartId} = req.body;
+        Cart.findById(cartId,function(err,cart){
+            if(err) next(err);
+            let isRemoved = cart.reduceByOne(itemId);
+            console.log(isRemoved)
+            if(isRemoved){
+                cart.save(function(err) {
+                    if (err) next(err);
+                    return res.status(statusCode.PUT).end();
+                });
+            }else{return res.status(statusCode.NOT_FOUND).json({error:"此购物车无该商品"})}
+        })
+    }
+
+    removeProduct(req,res,next){
+        let {itemId,cartId} = req.body;
+        Cart.findById(cartId,function(err,cart){
+            if(err) next(err);
+            let isRemoved = cart.removeProduct(itemId);
+            if(isRemoved){
+                cart.save(function(err) {
+                    if (err) next(err);
+                    return res.status(statusCode.PUT).end();
+                });
+            }else{return res.status(statusCode.NOT_FOUND).json({error:"此购物车无该商品"})}
+        })
+    }
     
 }
