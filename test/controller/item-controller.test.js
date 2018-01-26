@@ -1,7 +1,7 @@
 import request from 'supertest'
 import should from 'should'
 import app from '../../app'
-import statusCode from '../../constant/statusCode'
+import constant from '../../constant/constant'
 
 describe('API /items', function() {
     it('respond with all items', function(done) {

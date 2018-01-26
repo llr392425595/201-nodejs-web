@@ -6,7 +6,8 @@
   "scripts": {
     "babel-node": "babel-node",
     "start": "nodemon --exec npm run babel-node -- app.js",
-    "test": "mocha --require babel-register --recursive"
+    "test": "mocha --require babel-register --recursive",
+    "debug": "node --exec npm run babel-node --debug app.js"
   },
   "author": "",
   "license": "ISC",

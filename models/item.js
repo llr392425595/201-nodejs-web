@@ -2,9 +2,9 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const ItemsSchema = new Schema({
-    title: { type: String, required: true },
-    price: { type: String, required: true},
-    category_id: { type: String, required: true}
+    title: { type: Schema.Types.String, required: true },
+    price: { type: Schema.Types.Number, required: true},
+    category: { type: Schema.Types.ObjectId, ref: 'Category' } ,
 });
 
-module.exports = mongoose.model('Item',ItemsSchema)
+export default mongoose.model('Item',ItemsSchema)
