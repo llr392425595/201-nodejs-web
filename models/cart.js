@@ -1,3 +1,19 @@
+import mongoose from 'mongoose'
+const Schema = mongoose.Schema;
+
+const cartSchema = new Schema({
+    userId: Schema.Types.String,
+    items: [{
+        count: Schema.Types.Number,
+        item: {
+            type: Schema.ObjectId,
+            ref: 'Item'
+        }
+    }]
+});
+
+export default mongoose.model('Cart', cartSchema);
+
 // import mongoose from 'mongoose';
 // const Schema = mongoose.Schema;
 //
