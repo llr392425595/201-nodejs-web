@@ -23,14 +23,15 @@ export default class ItemController {
     }
     deleteCategory(req,res,next) {
         const categoryId = req.params.categoryId;
-        Category.findOneAndRemove(categoryId,(err, category)=>{
+        Category.findOneAndRemove({_id:categoryId},(err, category)=>{
             if (err) return next(err);
             if(!category) return res.sendStatus(constant.httpCode.NOT_FOUND);
             return res.sendStatus(constant.httpCode.NO_CONTENT);
         });
     }
     updateCategory(req,res,next) {
-        Category.findOneAndUpdate(req.params.categoryId,req.body,(err,category)=>{
+        const categoryId = req.params.categoryId;
+        Category.findOneAndUpdate({_id:categoryId},req.body,(err,category)=>{
             if (err) return next(err);
             if(!category) return res.sendStatus(constant.httpCode.NO_CONTENT);
             return res.sendStatus(constant.httpCode.NO_CONTENT);

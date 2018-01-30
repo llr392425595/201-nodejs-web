@@ -7,7 +7,7 @@ export default class ItemController {
             res.status(constant.httpCode.OK).json({ data: items,count: items.length })
         });
     }
-    getItemByID(req,res,next) {
+    getItemById(req,res,next) {
         //findById(itemId,callback),itemId的格式必须是mongoId格式(如：51bb793aca2ab77a3200000d)
         const itemId = req.params.itemId;
         Item.findById(itemId)
@@ -26,14 +26,15 @@ export default class ItemController {
     }
     deleteItem(req,res,next) {
         const itemId = req.params.itemId;
-        Item.findOneAndRemove(itemId, (err, item) => {
+        Item.findOneAndRemove({_id:itemId}, (err, item) => {
             if (err) return next(err);
             if(!item) return res.sendStatus(constant.httpCode.NOT_FOUND);
             return res.sendStatus(constant.httpCode.NO_CONTENT);
         });
     }
     updateItem(req,res,next) {
-        Item.findByIdAndUpdate(req.params.itemId, req.body, (err, item) => {
+        const itemId = req.params.itemId;
+        Item.findByIdAndUpdate({_id:itemId}, req.body, (err, item) => {
             if (err) return next(err);
             if (!item) return res.sendStatus(constant.httpCode.NOT_FOUND);
             return res.sendStatus(constant.httpCode.NO_CONTENT);
